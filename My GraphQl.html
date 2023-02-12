@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My GraphQl</title>
+    <link rel="stylesheet" href="My%20GraphQl_files/style.css">
+    <link rel="icon" type="image/png" href="http://127.0.0.1:5500/favicon.png">
+
+  </head>
+  <body>
+  <div id="tooltip" style="display: none;"></div>
+    <input type="text" id="searchUser" placeholder="Search user..." value="harlet">
+    <div class="main-container">
+      <div class="userinfo">
+        <img id="upic" alt="User's display picture">
+        <div id="uinfo">
+          <div id="uname">Username</div>        
+          <div id="uid">User id</div>
+          <div id="ulastactivity">Last activity</div>
+          <div id="totalxp">Xp earned</div>
+        </div>
+      </div>
+
+      <div class="auditinfo" id="auditinfo">
+        <div>Audits ratio</div>
+        <div id="auditgraph"></div>
+        <div id="auditxps">
+          <div id="auditxpdone"></div>
+          <div>Done ↑</div>
+          <div>Received ↓</div>
+          <div id="auditxpreceived"></div>
+        </div>
+        <div id="auditratio"></div>
+      </div>
+
+      <div class="levelinfo">        
+        <div id="levelinfo"></div>
+        <div id="nextlevel">Next level in .. xp</div>        
+      </div>
+
+      <div class="xpprogression" id="xpprogression">
+        <div>XP progression</div>
+      </div>
+
+      <div class="xpearnedbyproject" id="xpearnedbyproject">
+        <div>Xp earned by project</div>
+      </div>
+    <div>
+  	  <script src="My%20GraphQl_files/index.js"></script>
+      <script src="My%20GraphQl_files/d3.v6.min.js"></script>
+
+  <!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+</div></div></body></html>

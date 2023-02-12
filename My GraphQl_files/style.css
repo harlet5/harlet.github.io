@@ -1,0 +1,101 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+.main-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+  
+.userinfo {
+    display: grid;
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    border: solid;
+    border-color: red;
+}
+
+#upic {
+  width: 200px;
+  border: solid;
+  border-color: green;
+  height: 200px;
+}
+
+#uinfo {
+  border: solid;
+  border-color: green;
+  border-radius: 5px;
+  grid-column: 2 / 3;
+}
+  
+.auditinfo {
+    display: grid;
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+    border: solid;
+    border-color: red;
+}
+#auditgraph {
+  grid-row: 2 / 3;
+  grid-column: 1 / 2;
+  border: solid;
+  border-color: red;
+}
+#auditxps {
+  display: grid;
+  grid-row: 2 / 3;
+  grid-column: 2 / 2;
+  border: solid;
+  border-color: red;
+}
+
+#auditxpdone {
+  grid-row: 1 / 2;
+}
+
+#auditxpreceived {
+  grid-row: 4 / 4;
+}
+
+#auditratio {
+  grid-row: 3 / 3;
+  border: solid;
+  border-color: red;
+}
+
+  
+.levelinfo {
+    grid-column: 3 / 4;
+    grid-row: 1 / 2;
+}
+  
+.xpprogression {
+    grid-column: 1 / 4;
+    grid-row: 2 / 3;
+}
+  
+.xpearnedbyproject {
+    grid-column: 1 / 4;
+    grid-row: 3 / 4;
+}
+  
+.userinfo, .auditinfo, .levelinfo, .xpprogression, .xpearnedbyproject {
+    padding: 10px;
+    background-color: white;
+    color: #333;
+    font-size: 18px;
+    text-align: center;
+}
+  
+.userinfo:hover, .auditinfo:hover, .levelinfo:hover, .xpprogression:hover, .xpearnedbyproject:hover {
+    background-color: #f2f2f2;
+}
+#chart {
+  width: 300px;
+  height: 300px;
+}
+  
