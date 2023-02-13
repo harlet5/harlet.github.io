@@ -10,9 +10,10 @@
 
   </head>
   <body>
+  <div id="preloader"></div>
   <div id="tooltip" style="display: none;"></div>
-    <input type="text" id="searchUser" placeholder="Search user...">
-    <div class="main-container">
+    <input type="text" id="searchUser" placeholder="Search user..." value="harlet">
+    <div class="main-container skeleton">
       <div class="userinfo">
         <img id="upic" alt="User's display picture">
         <div id="uinfo">
@@ -24,7 +25,6 @@
       </div>
 
       <div class="auditinfo" id="auditinfo">
-        <div>Audits ratio</div>
         <div id="auditgraph"></div>
         <div id="auditxps">
           <div id="auditxpdone"></div>
@@ -32,7 +32,7 @@
           <div>Received ↓</div>
           <div id="auditxpreceived"></div>
         </div>
-        <div id="auditratio"></div>
+        <div id="auditratio">Audits ratio: </div>
       </div>
 
       <div class="levelinfo" >        
@@ -41,11 +41,11 @@
       </div>
 
       <div class="xpprogression" id="xpprogression">
-        <div>XP progression</div>
+        <h1>XP progression</h1>
       </div>
 
       <div class="xpearnedbyproject" id="xpearnedbyproject">
-        <div>Xp earned by project</div>
+        <h1>Xp earned by project</h1>
       </div>
     <div>
   	  <script src="index.js"></script>

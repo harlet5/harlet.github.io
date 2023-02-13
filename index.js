@@ -91,13 +91,13 @@ let transactionData = [];
 let projectsDone = [];
 let xpData = [];
 
-let uname;
+let uname = "harlet";
 let userid;
 let lastActivity;
 
 let auditRatio;
-let auditsDoneByYouXp;
-let auditsDoneForYouXp;
+let auditsDoneByYouXp = 0;
+let auditsDoneForYouXp = 0;
 
 let auditsXpDoneForSvg;
 let auditsXpDoneBySvg;
@@ -113,6 +113,7 @@ let pic = "https://01.kood.tech/git/user/avatar/${uname}/-1";
 function roundAuditRatio(num) {
   return Math.round(num * 10) / 10;
 }
+
 function convertBytes(bytes, decimalPlaces) {
   if (bytes >= 1000000) {
     return (bytes / 1000000).toFixed(2) + " MB";
@@ -128,12 +129,9 @@ const convertValues = () => {
   totalxp = convertBytes(totalxp, 0);
   nextLevel = convertBytes(nextLevel, 1);
 };
-/*
-let xpRangeBetweenLevels = 88634
-let nextLevelXpBytes = 60597
-*/
+
 const buildXpEarnedByProject = () => {
-  const width = 1300;
+  const width = window.innerWidth;
   const height = 1000;
   const margin = { top: 100, bottom: 400, left: 50, right: 50 };
 
@@ -193,19 +191,19 @@ const buildNextLevelPieChart = () => {
   const RATIO = nextLevelXpBytes / xpRangeBetweenLevels;
 
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("width", "100");
-  svg.setAttribute("height", "100");
+  svg.setAttribute("width", "150");
+  svg.setAttribute("height", "150");
 
   const circle = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "circle"
   );
-  let r = 46;
+  let r = 44;
   circle.setAttribute("cx", "50");
   circle.setAttribute("cy", "50");
   circle.setAttribute("r", r);
-  circle.setAttribute("fill", "transparent");
-  circle.setAttribute("stroke", `red`);
+  circle.setAttribute("fill", "lightgray");
+  circle.setAttribute("stroke", `green`);
   circle.setAttribute("stroke-width", "10");
   circle.setAttribute(
     "stroke-dasharray",
@@ -215,7 +213,7 @@ const buildNextLevelPieChart = () => {
 
   const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
   text.setAttribute("x", "50");
-  text.setAttribute("y", "50");
+  text.setAttribute("y", "54");
   text.setAttribute("fill", "black");
   text.setAttribute("text-anchor", "middle");
   text.innerHTML = level;
@@ -224,15 +222,13 @@ const buildNextLevelPieChart = () => {
   svg.appendChild(text);
   document.getElementById("levelinfo").appendChild(svg);
 };
-// #xpprogression
+
 const buildXpProgression = () => {
-  const width = 1000;
-  const height = 700;
+  let parent = document.querySelector("#xpprogression");
+  const width = parent.offsetWidth;
+  const height = 500;
   const margin = { top: 50, right: 50, bottom: 50, left: 50 };
   let calcTotalXp = 0;
-
-  const parseDate = d3.timeFormat("%B %d, %Y");
-  //console.log(xpData)
 
   const svg = d3
     .select("#xpprogression")
@@ -279,14 +275,14 @@ const buildXpProgression = () => {
     .attr("transform", `translate(0, ${height - margin.bottom})`)
     .call(d3.axisBottom(x));
 
-    const marks2 = [];
+  const marks2 = [];
 
-    marks.map((point, index) => {
-      marks2.push({x: point.x, y: point.y});
-      if (index < marks.length - 1) {
-        marks2.push({x: marks[index + 1].x, y: point.y});
-      }
-    });
+  marks.map((point, index) => {
+    marks2.push({ x: point.x, y: point.y });
+    if (index < marks.length - 1) {
+      marks2.push({ x: marks[index + 1].x, y: point.y });
+    }
+  });
 
   svg.append("path").attr("d", line(marks2));
 };
@@ -303,13 +299,17 @@ const mainFunc = async (userid, offset) => {
   convertValues();
   buildNextLevelPieChart();
   buildHtml();
+  let loader = document.getElementById("preloader");
+  loader.style.display = "none";
 };
 
-const defaultMain = () => {
-  uname = searchUser.value;
-  clearData();
-  variables = { login: searchUser.value };
+const defaultMain = (username) => {
+  variables = { login: username };
   queryFetch(userRequest, variables).then((result) => {
+    if (result.data.user.length === 0) {
+      alert("Not valid username");
+      return;
+    }
     userid = result.data.user[0].id;
     let offset = 0;
     variables = { id: userid, offset: offset };
@@ -317,15 +317,36 @@ const defaultMain = () => {
   });
 };
 
+function parseDate(date) {
+  const options = {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  };
+  return new Intl.DateTimeFormat("en-US", options).format(new Date(date));
+}
+async function updateImage(src) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.src = src;
+    image.onload = resolve;
+    image.onerror = reject;
+  });
+}
+
+async function changeImage() {
+  const src = `https://01.kood.tech/git/user/avatar/${uname}/-1`;
+  await updateImage(src);
+  document.getElementById("upic").src = src;
+}
 const buildHtml = () => {
-  document.getElementById(
-    "upic"
-  ).src = `https://01.kood.tech/git/user/avatar/${uname}/-1`;
+  changeImage()
   document.getElementById("uname").innerHTML = "Username: " + uname;
   document.getElementById("uid").innerHTML = "User id: " + userid;
   document.getElementById("ulastactivity").innerHTML =
-    "Last activity: " + lastActivity;
-  document.getElementById("auditratio").innerHTML = auditRatio;
+    "Last activity: " + parseDate(lastActivity);
+  document.getElementById("auditratio").innerHTML =
+    "Audits ratio: " + auditRatio;
   document.getElementById("auditxpdone").innerHTML = auditsDoneByYouXp;
   document.getElementById("auditxpreceived").innerHTML = auditsDoneForYouXp;
   document.getElementById("totalxp").innerHTML = "Xp earned: " + totalxp;
@@ -337,8 +358,6 @@ const buildHtml = () => {
 };
 
 const buildAuditRatios = () => {
-  // Design output as in 01kood page
-  // Build 2 svg rectangles, 1. for audit done xp and 2. audit received xp
   const rect1Length = auditsXpDoneForSvg;
   const rect2Length = auditsXpDoneBySvg;
   const maxLength = 250;
@@ -366,7 +385,7 @@ const buildAuditRatios = () => {
   rect1Shape.setAttribute("y", "10");
   rect1Shape.setAttribute("width", rect1Normalized);
   rect1Shape.setAttribute("height", "80");
-  rect1Shape.setAttribute("fill", "#f00");
+  rect1Shape.setAttribute("fill", "green");
 
   svg1.appendChild(rect1Shape);
   rect1.appendChild(svg1);
@@ -388,7 +407,7 @@ const buildAuditRatios = () => {
   rect2Shape.setAttribute("y", "10");
   rect2Shape.setAttribute("width", rect2Normalized);
   rect2Shape.setAttribute("height", "80");
-  rect2Shape.setAttribute("fill", "#00f");
+  rect2Shape.setAttribute("fill", "red");
 
   svg2.appendChild(rect2Shape);
   rect2.appendChild(svg2);
@@ -397,34 +416,18 @@ const buildAuditRatios = () => {
   document.getElementById("auditgraph").appendChild(container);
 };
 
-const clearData = () => {
-  transactionData = [];
-  projectsDone = [];
-  xpData = [];
-  userid = 0;
-  lastActivity = "";
-  auditRatio = 0;
-  auditsDoneByYouXp = 0;
-  auditsDoneForYouXp = 0;
-  totalxp = 0;
-  level = 0;
-  nextLevel = 0;
-  xpRangeBetweenLevels = 0;
-  nextLevelXpBytes = 0;
-  auditsXpDoneForSvg = 0;
-  auditsXpDoneBySvg = 0;
-  d3.select("#xpearnedbyproject").select("svg").remove();
-  d3.select("#auditgraph").select("svg").remove();
-  d3.select("#levelinfo").select("svg").remove();
-  d3.select("#auditinfo").select("svg").remove();
-};
-
 searchUser.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     uname = searchUser.value;
-    clearData();
-    variables = { login: searchUser.value };
+    variables = { login: uname };
     queryFetch(userRequest, variables).then((result) => {
+      if (result.data.user.length === 0) {
+        alert("Not valid username");
+        return;
+      }
+      let loader = document.getElementById("preloader");
+      loader.style.display = "block";
+      clearData();
       userid = result.data.user[0].id;
       let offset = 0;
       variables = { id: userid, offset: offset };
@@ -442,19 +445,9 @@ async function queryUserLevel(userid) {
 async function queryLastActivity(userid) {
   variables = { id: userid };
   return queryFetch(lastActivityRequest, variables).then((result) => {
-    lastActivity = dateFormat(result.data.user[0].progresses[0].createdAt);
+    lastActivity = result.data.user[0].progresses[0].createdAt;
   });
 }
-const dateFormat = (input) => {
-  return input;
-  const date = new Date(input);
-  const formattedDate = date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-  return formattedDate;
-};
 
 async function queryProgresses(userid, offset) {
   variables = { id: userid, offset: offset };
@@ -478,7 +471,7 @@ async function queryTotalXp(userid, projects) {
     xpData.push([
       result.data.transaction[0].amount,
       element,
-      dateFormat(result.data.transaction[0].createdAt),
+      result.data.transaction[0].createdAt,
     ]);
     return result.data.transaction[0].amount;
   });
@@ -535,54 +528,28 @@ async function queryFetch(queryText, variables) {
 function levelNeededXP(level) {
   return Math.round(level * (176 + 3 * level * (47 + 11 * level)));
 }
-/*
-[ 6125, "ascii-art-output", "28/09/2021" ]​
-[ 5000, "go-reloaded", "16/09/2021" ]​
-[ 10000, "math-skills", "27/09/2021" ]​
-[ 5000, "tetris-optimizer", "08/12/2021" ]​
-[ 9200, "ascii-art-web-export-file", "15/10/2021" ]
-[ 6125, "ascii-art", "19/09/2021" ]
-[ 6125, "ascii-art-reverse", "28/09/2021" ]​
-[ 10000, "linear-stats", "22/10/2021" ]
-[ 24500, "groupie-tracker", "27/10/2021" ]​
-[ 76250, "forum", "29/04/2022" ]​
-[ 9200, "ascii-art-web-stylize", "15/10/2021" ]
-[ 5000, "guess-it-1", "18/10/2021" ]​
-[ 9200, "ascii-art-web-dockerize", "18/10/2021" ]​
-[ 9200, "ascii-art-web", "11/10/2021" ]​
-[ 147000, "make-your-game", "08/05/2022" ]
-[ 5000, "guess-it-2", "25/10/2021" ]​
-[ 6125, "ascii-art-justify", "12/10/2021" ]
-[ 70000, "Piscine JS", "29/03/2022" ]
-[ 34375, "lem-in", "11/11/2021" ]​
-[ 390000, "Piscine Rust 2022", "03/10/2022" ]​
-[ 12250, "groupie-tracker-geolocalization", "30/05/2022" ]​
-[ 6125, "ascii-art-fs", "11/10/2021" ]​
-[ 6125, "ascii-art-color", "30/09/2021" ]
-*/
 
-const prygi = () => {
-  let uname = "tom";
-  let userid = 2431;
-  let lastActivity = "22/01/2023";
-  let auditRatio = 1.2;
-  let auditsdonebyyouxp = "861 kB";
-  let auditsdoneforyouxp = "1.02 MB";
-  let totalxp = "868 kB";
-  let level = 28;
-  let nextlevel = "60.6 kB";
+const clearData = () => {
+  transactionData = [];
+  projectsDone = [];
+  xpData = [];
+  userid = 0;
+  lastActivity = "";
+  auditRatio = 0;
+  auditsDoneByYouXp = 0;
+  auditsDoneForYouXp = 0;
+  totalxp = 0;
+  level = 0;
+  nextLevel = 0;
+  xpRangeBetweenLevels = 0;
+  nextLevelXpBytes = 0;
+  auditsXpDoneForSvg = 0;
+  auditsXpDoneBySvg = 0;
+  d3.select("#xpearnedbyproject").select("svg").remove();
+  d3.select("#auditgraph").select("svg").remove();
+  d3.select("#levelinfo").select("svg").remove();
+  d3.select("#auditinfo").select("svg").remove();
+  d3.select("#xpprogression").select("svg").remove();
 };
 
-const printValues = () => {
-  console.log("uname: ", uname);
-  console.log("userid: ", userid);
-  console.log("lastactivity: ", lastActivity);
-  console.log("auditratio: ", auditRatio);
-  console.log("auditsdonebyyouxp: ", auditsDoneByYouXp);
-  console.log("auditsdoneforyouxp: ", auditsDoneForYouXp);
-  console.log("totalxp: ", totalxp);
-  console.log("level: ", level);
-  console.log("nextlevel: ", nextLevel);
-  console.log(xpData);
-};
-defaultMain();
+defaultMain("harlet");

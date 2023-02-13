@@ -1,5 +1,17 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: aliceblue;
+    background-image: url("Background.PNG");
+    margin: 0;
+}
+
+#preloader {
+  background: #000 url("preloader.gif") no-repeat center center;
+  background-size: 15%;
+  height:100vh;
+  width:100%;
+  position: fixed;
+  z-index: 100;
 }
 
 .main-container {
@@ -8,49 +20,49 @@ body {
     grid-template-rows: auto auto auto;
     background-color: #f2f2f2;
     padding: 20px;
+    background-color: aliceblue;
+    background-image: url("Background.PNG");
 }
   
 .userinfo {
     display: grid;
     grid-column: 1 / 2;
     grid-row: 1 / 2;
+    background-image: url("Background.PNG");
     border: solid;
-    border-color: red;
+    border-radius: 3px;
+    border-color: aliceblue;
 }
 
 #upic {
   width: 200px;
-  border: solid;
-  border-color: green;
   height: 200px;
 }
 
 #uinfo {
-  border: solid;
-  border-color: green;
-  border-radius: 5px;
+  text-align: left;
   grid-column: 2 / 3;
+  margin-left: 20px;
 }
   
 .auditinfo {
     display: grid;
     grid-column: 2 / 3;
     grid-row: 1 / 2;
+    background-image: url("Background.PNG");
     border: solid;
-    border-color: red;
+    border-radius: 3px;
+    border-color: aliceblue;
 }
 #auditgraph {
   grid-row: 2 / 3;
   grid-column: 1 / 2;
-  border: solid;
-  border-color: red;
+  margin-top: 22px;
 }
 #auditxps {
   display: grid;
   grid-row: 2 / 3;
   grid-column: 2 / 2;
-  border: solid;
-  border-color: red;
 }
 
 #auditxpdone {
@@ -63,24 +75,35 @@ body {
 
 #auditratio {
   grid-row: 3 / 3;
-  border: solid;
-  border-color: red;
+  
 }
 
   
 .levelinfo {
     grid-column: 3 / 4;
     grid-row: 1 / 2;
+    background-image: url("Background.PNG");
+    border: solid;
+    border-radius: 3px;
+    border-color: aliceblue;
 }
   
 .xpprogression {
     grid-column: 1 / 4;
     grid-row: 2 / 3;
+    background-image: url("Background.PNG");
+    border: solid;
+    border-radius: 3px;
+    border-color: aliceblue;
 }
   
 .xpearnedbyproject {
     grid-column: 1 / 4;
     grid-row: 3 / 4;
+    background-image: url("Background.PNG");
+    border: solid;
+    border-radius: 3px;
+    border-color: aliceblue;
 }
   
 .userinfo, .auditinfo, .levelinfo, .xpprogression, .xpearnedbyproject {
@@ -110,3 +133,16 @@ path {
   fill: none;
 }
   
+.skeleton {
+  animation: skeleton-loading 1s linear infinite alternate;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-color: hsl(200, 20%, 70%);
+  }
+
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
+}
