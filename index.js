@@ -70,7 +70,7 @@ query ($id: Int ) {
       }
 }`;
 
-const totalXpRequest = `
+/* const totalXpRequest = `
 query ($projectName: String, $id: Int ) {
     transaction(
         where: {_and: [{user: {id: {_eq: $id}}},
@@ -84,6 +84,27 @@ query ($projectName: String, $id: Int ) {
         amount
         createdAt
     }
+}`; */
+const totalXpRequest = `
+query ($projectName: String, $id: Int ) {
+  transaction(
+      where: {_and: [{user: {id: {_eq: $id}}},
+      {object: {name: {_eq: $projectName}}},
+      ]},
+      order_by: {amount: desc},
+      limit: 1) {
+      object {
+      name
+      progresses (
+        where : {
+          isDone: {_eq: true}
+          userId: {_eq: $id}
+        }){
+        updatedAt
+      }
+      }
+      amount
+  }
 }`;
 
 let searchUser = document.getElementById("searchUser");
@@ -471,16 +492,18 @@ async function queryTotalXp(userid, projects) {
     xpData.push([
       result.data.transaction[0].amount,
       element,
-      result.data.transaction[0].createdAt,
+      result.data.transaction[0].object.progresses[0].updatedAt,
     ]);
     return result.data.transaction[0].amount;
   });
   const amounts = await Promise.all(requests);
+  //console.log("xpdata1: ",xpData)
   xpData.sort((a, b) => {
     let dateA = new Date(a[2].split("/").reverse().join("-"));
     let dateB = new Date(b[2].split("/").reverse().join("-"));
     return dateA - dateB;
   });
+  //console.log("xpdata2: ", xpData)
   const totalxp = amounts.reduce((sum, amount) => sum + amount, 0);
   return totalxp;
 }
